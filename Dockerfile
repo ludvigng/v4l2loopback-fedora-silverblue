@@ -8,7 +8,7 @@ FROM registry.fedoraproject.org/fedora:$FEDORA_VERSION
 WORKDIR workdir
 VOLUME ["/build"]
 RUN dnf update -y
-RUN dnf install kernel-devel kernel-modules-internal-`uname -r` kernel-devel-`uname -r` awk  -y
+RUN dnf install kernel-modules-internal-`uname -r` kernel-devel-`uname -r` awk  -y
 COPY --from=v4l2loopback_git workdir/v4l2loopback ./
 RUN make clean
 RUN make
