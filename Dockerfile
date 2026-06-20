@@ -1,4 +1,4 @@
-ARG FEDORA_VERSION=44
+ARG FEDORA_VERSION=43
 FROM registry.fedoraproject.org/fedora:$FEDORA_VERSION as v4l2loopback_git
 WORKDIR workdir
 RUN dnf install git -y
@@ -12,7 +12,6 @@ RUN dnf install kernel-devel kernel-modules-internal-`uname -r` kernel-devel-`un
 COPY --from=v4l2loopback_git workdir/v4l2loopback ./
 RUN make clean
 RUN make
-RUN /usr/src/kernels/`uname -r`/scripts/sign-file sha256 build/v4l2loopback.priv build/v4l2loopback.cer v4l2loopback.ko
 RUN rm -rf ./build/v4l2loopback
 RUN mkdir -p ./build/v4l2loopback
 RUN cp ./v4l2loopback.ko ./build/v4l2loopback
