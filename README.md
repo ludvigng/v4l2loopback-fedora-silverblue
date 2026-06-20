@@ -168,27 +168,3 @@ Sure you can! just adapt the dockerfile to your distribution.
 https://github.com/moacirrf/v4l2loopback-fedora-silverblue/blob/main/Dockerfile
 
 You can ask CHATGPT to convert dockerfile content to work with Ubuntu.
-
-### Secure boot and signing the module
-By default having secure boot enabled means that the system will refuse to load modules not signed with the appropriate key. For this we need to create a key, import it through mokutil and sign the module with it to be able to load it.
-
-**Do note that this will create an unencrypted key file which someone can then use to sign malicious kernel modules**
-
-First we create a key and a certificate:
-
-        efikeygen --dbdir /etc/pki/pesign --self-sign --module --common-name 'CN=v4l2loopback' --nickname 'v4l2loopback signing key'
-        certutil -d /etc/pki/pesign -n 'v4l2loopback signing key' -Lr > v4l2loopback.cer
-
-Now we import the certificate with mokutil. It will ask for a key, which you will then have to repeat once you reboot:
-
-        mokutil --import v4l2loopback.cer
-
-Then we extract the key to a PKCS #12 file. It will ask for a password:
-
-        pk12util -o v4l2loopback.p12 -n 'v4l2loopback signing key' -d /etc/pki/pesign
-
-Then we export the unencrypted key:
-
-        openssl pkcs12 -in v4l2loopback.p12 -out v4l2loopback.priv -nocerts -nodes
-
-Copy **v4l2loopback.cer** and **v4l2loopback.priv** to the **build**-dir and then run the **podman_build.sh**-script again.
