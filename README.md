@@ -31,6 +31,10 @@ If you just want build and run, lets go!:
 
    > ARG FEDORA_VERSION=**YOUR_VERSION**
    
+2. OPTIONAL: Create a key to sign the module for secure boot:
+
+        bash create-sb-key.sh
+
 3. Build
         
         sh podman_build.sh --no-cache
